@@ -1,4 +1,8 @@
 // FUNCIONES PARA EL ARBOL B+
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
 int Aprox(double x) // aproximador
 {
     n = (int)x;
@@ -81,15 +85,15 @@ public class Nodo // nodo para el árbol B+
 {
     public Libro libro { get; set; }
     public Nodo siguiente { get; set; }
-    public int[] claves { get; set; }
-    public Nodo[] hijos { get; set; }
+    public List<int> claves { get; set; }
+    public List<Nodo> hijos { get; set; }
     public Nodo padre { get; set; }
     public bool esHoja { get; set; }
 
     public Nodo(int grado, bool esHoja = true)
     {
-        this.Claves = new int[2 * grado - 1]; // Inicializa el arreglo de claves
-        this.Valores = new Nodo[2 * grado - 1]; // Inicializa el arreglo de valores
+        this.Claves = new List<int>(); // Inicializa el arreglo de claves
+        this.Valores = new List<Nodo>(); // Inicializa el arreglo de valores
         this.siguiente = null; // Inicializa el puntero al siguiente nodo como null
         this.padre = null; // Inicializar el padre del nodo actual como null
         this.esHoja = esHoja; // Establece si el nodo es una hoja o no
@@ -107,7 +111,7 @@ public class ArbolLibros //el mero Árbol B+
     public ArbolLibros(int orden)
     {
         this.orden = orden;
-        this.max_claves = 2 * orden - 1; // Calcula el número máximo de claves por nodo
+        this.max_claves = Aprox(2 * orden - 1); // Calcula el número máximo de claves por nodo
         this.raiz = new Nodo(orden); // Inicializa la raíz del árbol
     }
 
@@ -136,29 +140,18 @@ public class ArbolLibros //el mero Árbol B+
     }
 
     // ----- INSERCIÓN -----
-    public void Insertar(Libro Libro)
+    public void Insertar(int clave)
     {
-        if (raiz == null) // Si la raíz está vacía, se inserta ahí
-        {
-            raiz = new Nodo(orden);
-            raiz.Claves[0] = Libro.codigo;
-            raiz.Valores[0] = Libro;
-            return;
-        }
-
-        if (buscar(Libro.codigo)) // Si el libro ya existe, no se inserta
+        if (buscar(clave)) // Si el libro ya existe, no se inserta
         {
             return;
         }
 
-        if (raiz.Claves[max_claves - 1] != 0) // Si la raíz está llena, se divide
-        {
-            Nodo nuevaRaiz = new Nodo(orden, false);
-            nuevaRaiz.siguiente = raiz;
-            DividirNodo(nuevaRaiz, 0, raiz);
-            raiz = nuevaRaiz;
-        }
-        InsertarNoLleno(raiz, Libro); // Inserta el libro en un nodo que no está lleno
+        Nodo hoja = buscar_hoja(clave);
+        int posc = ins_der(hoja.claves, clave);
+        List<int> lista = hoja.claves;
+        List<int> izq = lista.GetRange(0, posc);
+        List<int> der = lista.GetRange(posc, lista.Count - posc);
 
 
     }
