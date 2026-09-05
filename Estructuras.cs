@@ -1,3 +1,50 @@
+int Aprox(double x)
+{
+    n = (int)x;
+    if (x == n)
+    {
+        return x;
+    }
+    else
+    {
+        return n + 1;
+    }
+}
+
+
+int ins_izq(int[] lista, int buscado) 
+{
+    int posc = 0;
+    foreach (int i in lista)
+    {
+        posc += 1;
+        if (i == buscado)
+        {
+            return posc;
+        }
+    }
+    return -1;
+}
+
+int ins_der(int[] lista, int buscado)
+{
+    int posc = 0;
+    int actual = 0;
+    foreach (int i in lista)
+    {
+        posc += 1;
+        if (i == buscado)
+        {
+            actual = posc;
+        }
+    }
+    if (actual == 0)
+    {
+        return -1;
+    }
+    return actual;
+}
+
 public class Libro
 {
     // Atributos de los libros
@@ -31,9 +78,9 @@ public class Nodo
 {
     public Libro Libro { get; set; }
     public Nodo siguiente { get; set; }
-    public int[] Claves { get; set; } // Arreglo de claves para el nodo
-    public Libro[] Valores { get; set; } // Arreglo de valores para el nodo
-    public bool esHoja { get; set; } // Indica si el nodo es una hoja
+    public int[] Claves { get; set; }    
+    public Libro[] Valores { get; set; }
+    public bool esHoja { get; set; } 
 
     public Nodo(int grado, bool esHoja = true)
     {
@@ -66,7 +113,7 @@ public class ArbolLibros
 
     public void Insertar(Libro Libro)
     {
-        if (raiz == null) // Si la raíz es null, crea un nuevo nodo y lo asigna como raíz
+        if (raiz == null) // Si la raíz está vacía, se inserta ahí
         {
             raiz = new Nodo(orden);
             raiz.Claves[0] = Libro.codigo;
@@ -74,7 +121,7 @@ public class ArbolLibros
         }
         else
         {
-            if (raiz.Claves[max_claves - 1] != 0) // Si la raíz está llena, se debe dividir
+            if (raiz.Claves[max_claves - 1] != 0) // Si la raíz está llena, se divide
             {
                 Nodo nuevaRaiz = new Nodo(orden, false);
                 nuevaRaiz.siguiente = raiz;
@@ -84,6 +131,11 @@ public class ArbolLibros
             InsertarNoLleno(raiz, Libro); // Inserta el libro en un nodo que no está lleno
         }
 
+    }
+
+    private void DividirNodo(Nodo nodoPadre, int posicion, Nodo nodoHijo)
+    {
+        
     }
 
 
@@ -97,7 +149,7 @@ public class ArbolLibros
             return false;
 
         int i = 0;
-        while (i < nodo.Claves.Length && nodo.Claves[i] != 0 && codigo > nodo.Claves[i]) // Busca la posición del código en el nodo
+        while (i < nodo.Claves.Length && nodo.Claves[i] != 0 && codigo > nodo.Claves[i]) 
             i++;
 
         if (i < nodo.Claves.Length && nodo.Claves[i] == codigo) // Si encuentra el código, retorna true
@@ -106,6 +158,6 @@ public class ArbolLibros
         if (nodo.esHoja) // Si es una hoja y no encontró el código, retorna false
             return false;
 
-        return BuscarRecursivo(nodo.siguiente, codigo); // Llama recursivamente a la función para buscar en el siguiente nodo
+        return BuscarRecursivo(nodo.siguiente, codigo); 
     }
 }
