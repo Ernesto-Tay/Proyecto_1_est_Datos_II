@@ -46,6 +46,7 @@ int ins_der(int[] lista, int buscado) // obtiene la posición más a la derecha 
     return min;
 }
 
+
 public class Libro // la clase del libro (así todo queda bien organizado)
 {
     // Atributos de los libros
@@ -75,22 +76,27 @@ public class Libro // la clase del libro (así todo queda bien organizado)
 }
 
 
+
 public class Nodo // nodo para el árbol B+
 {
-    public Libro Libro { get; set; }
+    public Libro libro { get; set; }
     public Nodo siguiente { get; set; }
-    public int[] Claves { get; set; }
-    public Libro[] Valores { get; set; }
+    public int[] claves { get; set; }
+    public Nodo[] hijos { get; set; }
+    public Nodo padre { get; set; }
     public bool esHoja { get; set; }
 
     public Nodo(int grado, bool esHoja = true)
     {
         this.Claves = new int[2 * grado - 1]; // Inicializa el arreglo de claves
-        this.Valores = new Libro[2 * grado - 1]; // Inicializa el arreglo de valores
+        this.Valores = new Nodo[2 * grado - 1]; // Inicializa el arreglo de valores
         this.siguiente = null; // Inicializa el puntero al siguiente nodo como null
+        this.padre = null; // Inicializar el padre del nodo actual como null
         this.esHoja = esHoja; // Establece si el nodo es una hoja o no
     }
 }
+
+
 
 public class ArbolLibros //el mero Árbol B+
 {
@@ -111,7 +117,25 @@ public class ArbolLibros //el mero Árbol B+
         return raiz == null; // Indica si el arbol está vacío
     }
 
+    private Nodo buscar_hoja(int codigo) // Función para llevar la posición actual al nodo hoja óptimo
+    {
+        Nodo actual = raiz;
+        while (!actual.esHoja) // siempre y cuando el nodo actual no sea una hoja...
+        {
+            int posicion = ins_der(actual.claves);
+            Nodo actual = actual.hijos[posicion]; // actualiza la posición para el último nodo con clave coincidente, y busca en ese nodo tmb
+        }
+        return actual;
+    }
 
+    public bool buscar(int clave) // busca si existe un nodo con definida clave
+    {
+        Nodo hoja = buscar_hoja(clave);
+        int posc = ins_izq(hoja.claves, clave); // utliza la función para llevar a nodos hoja
+        return posc < hoja.claves.Length && hoja.claves[posc] == clave; // si la posición no sobrepasa el tamaño de matriz Y la posición actual apunta a un nodo, retorna True
+    }
+
+    // ----- INSERCIÓN -----
     public void Insertar(Libro Libro)
     {
         if (raiz == null) // Si la raíz está vacía, se inserta ahí
@@ -119,46 +143,29 @@ public class ArbolLibros //el mero Árbol B+
             raiz = new Nodo(orden);
             raiz.Claves[0] = Libro.codigo;
             raiz.Valores[0] = Libro;
+            return;
         }
-        else
+
+        if (buscar(Libro.codigo)) // Si el libro ya existe, no se inserta
         {
-            if (raiz.Claves[max_claves - 1] != 0) // Si la raíz está llena, se divide
-            {
-                Nodo nuevaRaiz = new Nodo(orden, false);
-                nuevaRaiz.siguiente = raiz;
-                DividirNodo(nuevaRaiz, 0, raiz);
-                raiz = nuevaRaiz;
-            }
-            InsertarNoLleno(raiz, Libro); // Inserta el libro en un nodo que no está lleno
+            return;
         }
 
+        if (raiz.Claves[max_claves - 1] != 0) // Si la raíz está llena, se divide
+        {
+            Nodo nuevaRaiz = new Nodo(orden, false);
+            nuevaRaiz.siguiente = raiz;
+            DividirNodo(nuevaRaiz, 0, raiz);
+            raiz = nuevaRaiz;
+        }
+        InsertarNoLleno(raiz, Libro); // Inserta el libro en un nodo que no está lleno
+
+
     }
 
-    private void DividirNodo(Nodo nodoPadre, int posicion, Nodo nodoHijo)
+    private void DividirNodo(Nodo nodoPadre, int posicion, Nodo nodoHijo) // proceso de división
     {
-        
+
     }
 
-
-    public bool Buscar(int codigo)
-    {
-        return BuscarRecursivo(raiz, codigo); // Llama a la función recursiva para buscar el libro
-    }
-    private bool BuscarRecursivo(Nodo nodo, int codigo)
-    {
-        if (nodo == null) // Si el nodo es null, retorna false
-            return false;
-
-        int i = 0;
-        while (i < nodo.Claves.Length && nodo.Claves[i] != 0 && codigo > nodo.Claves[i]) 
-            i++;
-
-        if (i < nodo.Claves.Length && nodo.Claves[i] == codigo) // Si encuentra el código, retorna true
-            return true;
-
-        if (nodo.esHoja) // Si es una hoja y no encontró el código, retorna false
-            return false;
-
-        return BuscarRecursivo(nodo.siguiente, codigo); 
-    }
 }
