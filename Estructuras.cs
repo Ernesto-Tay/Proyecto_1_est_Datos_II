@@ -1,51 +1,52 @@
-int Aprox(double x)
+// FUNCIONES PARA EL ARBOL B+
+int Aprox(double x) // aproximador
 {
     n = (int)x;
     if (x == n)
     {
-        return x;
+        return n; // si son iguales, retorna el número convertido
     }
     else
     {
-        return n + 1;
+        return n + 1; // si no lo son, le suma 1 par aproximar y no quedar truncado
     }
 }
 
-
-int ins_izq(int[] lista, int buscado) 
+// estas madres usan búsqueda binaria y yo ni en cuenta ;-;
+// buscar el valor más a la derecha 
+int ins_izq(int[] lista, int buscado)  // obtiene la posición más a la izquierda de todas las istnacias encotradas del valor buscado
 {
-    int posc = 0;
-    foreach (int i in lista)
+    int max = lista.Length;
+    int min = 0;
+    while (min < max)
     {
-        posc += 1;
-        if (i == buscado)
+        int medio = (max + min) / 2; // busca la mitad de la lista actual
+        if (lista[medio] < buscado) // siempre que el medio sea menor al buscado, se va al bloque derecho
         {
-            return posc;
+            min = medio + 1;
         }
+        else max = medio;
     }
-    return -1;
+    return min;
 }
 
-int ins_der(int[] lista, int buscado)
+int ins_der(int[] lista, int buscado) // obtiene la posición más a la derecha de todas las instancias aparecidas en el valor buscado
 {
-    int posc = 0;
-    int actual = 0;
-    foreach (int i in lista)
+    int max = lista.Length;
+    int min = 0;
+    while (min < max)
     {
-        posc += 1;
-        if (i == buscado)
+        int medio = (max + min) / 2; 
+        if (lista[medio] <= buscado) // si el medio es menor O IGUAL al buscado, se toma el bloque derecho (para ir al valor más a la derecha que exista)
         {
-            actual = posc;
+            min = medio + 1;
         }
+        else max = medio;
     }
-    if (actual == 0)
-    {
-        return -1;
-    }
-    return actual;
+    return min;
 }
 
-public class Libro
+public class Libro // la clase del libro (así todo queda bien organizado)
 {
     // Atributos de los libros
     public int codigo { get; set; }
@@ -71,16 +72,16 @@ public class Libro
     {
         Console.WriteLine($"Código:\t\t{codigo}\nTítulo:\t\t{titulo}\nAutor:\t\t{autor}\nGénero:\t\t{genero}\nCopias disponibles:\t{copias}\nVeces prestado:\t{veces_prestado}");
     }
-
 }
 
-public class Nodo
+
+public class Nodo // nodo para el árbol B+
 {
     public Libro Libro { get; set; }
     public Nodo siguiente { get; set; }
-    public int[] Claves { get; set; }    
+    public int[] Claves { get; set; }
     public Libro[] Valores { get; set; }
-    public bool esHoja { get; set; } 
+    public bool esHoja { get; set; }
 
     public Nodo(int grado, bool esHoja = true)
     {
@@ -91,7 +92,7 @@ public class Nodo
     }
 }
 
-public class ArbolLibros
+public class ArbolLibros //el mero Árbol B+
 {
     private Nodo raiz; // Raíz del árbol
     private int orden;
