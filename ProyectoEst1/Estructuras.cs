@@ -213,7 +213,7 @@ namespace Estructuras
             int p_div = nodo.claves.Count / 2;
             int ascendido = nodo.claves[p_div];
 
-            Nodo n_interno = Nodo();
+            Nodo n_interno = new Nodo(false);
             n_interno.padre = nodo.padre;
 
             n_interno.claves = nodo.claves.GetRange(p_div + 1, nodo.claves.Count - p_div - 1);
@@ -413,13 +413,11 @@ namespace Estructuras
 
         private void _mostrar(Nodo nodo, int nivel)
         {
-            string sangria = "\t";
-            string s_total;
-            for (i=0; i<nivel; ins_padre++) s_total = s_total + sangria;
+            string sangria = new string('\t', nivel);
             string tipo;
             if (nodo.esHoja) tipo = "Hoja";
             else tipo = "Interno";
-            Console.WriteLine($"{s_total}{tipo}: {nodo.claves}");
+            Console.WriteLine($"{sangria}{tipo}: {string.Join(",",nodo.claves)}");
 
             if (!nodo.esHoja)
             {

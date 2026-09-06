@@ -3,3 +3,13 @@ c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semes
 c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\ProyectoEst1.AssemblyInfo.cs
 c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\ProyectoEst1.csproj.CoreCompileInputs.cache
 c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\ProyectoEst1.sourcelink.json
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\bin\Debug\net10.0\ProyectoEst1.exe
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\bin\Debug\net10.0\ProyectoEst1.deps.json
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\bin\Debug\net10.0\ProyectoEst1.runtimeconfig.json
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\bin\Debug\net10.0\ProyectoEst1.dll
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\bin\Debug\net10.0\ProyectoEst1.pdb
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\ProyectoEst1.dll
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\refint\ProyectoEst1.dll
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\ProyectoEst1.pdb
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\ProyectoEst1.genruntimeconfig.cache
+c:\Users\ASUS\OneDrive - Universidad Rafael Landivar\Documentos\progra\Uni\Semestre IV\Python\Proyecto_1_est_Datos_II\ProyectoEst1\obj\Debug\net10.0\ref\ProyectoEst1.dll
