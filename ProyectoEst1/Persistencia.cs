@@ -1,10 +1,11 @@
-using System.Text.Json;
 using System.IO;
+using System.Text.Json;
 namespace ProyectoEst1
 {
     class GuardarLibros
     {
-        public ArbolLibros admin = new ArbolLibros();
+        public ArbolLibros admin = new ArbolLibros(4);
+
         public void Guardar()
         {
             try{
@@ -24,7 +25,7 @@ namespace ProyectoEst1
             {
                 string json = File.ReadAllText("Libros.json");
                 List<Libro> libros = JsonSerializer.Deserialize<List<Libro>>(json);
-                foreach (Libro libro in libros)admin.insertar(libro);
+                foreach (Libro libro in libros)admin.Insertar(libro);
             }
             catch (JsonException ex)
             {
@@ -57,7 +58,7 @@ namespace ProyectoEst1
             {
                 string json = File.ReadAllText("Prestamos.json");
                 List<Prestamo> prestamos = JsonSerializer.Deserialize<List<Prestamo>>(json);
-                foreach (Prestamo prestamo in prestamos) admin.agregar(prestamo);
+                foreach (Prestamo prestamo in prestamos) admin.agregar(prestamo.libros_prestados, prestamo.cantidad_prestada);
             }
             catch (JsonException ex)
             {
@@ -65,4 +66,4 @@ namespace ProyectoEst1
             }
         }
     }
-}
+}  

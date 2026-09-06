@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 namespace ProyectoEst1
 {
     class Prestamo
@@ -74,6 +76,7 @@ namespace ProyectoEst1
                     heap[index] = b;
                     heap[max] = a;
                     index = max;
+                    index = max;
                 }
                 else {break;}
             }
@@ -82,6 +85,7 @@ namespace ProyectoEst1
         public void agregar(List<int> codigos, List<int> cantidades) // agrega un nuevo préstamo a la lista
         {
             Prestamo nuevo = new Prestamo(codigos, cantidades);
+            nuevo.EstablecerPrioridad();
             nuevo.EstablecerPrioridad();
             heap.Add(nuevo);
             heapify_up(heap.Count - 1);
@@ -101,6 +105,7 @@ namespace ProyectoEst1
             if (heap.Count == 0) return null;
             Prestamo raiz = heap[0];
             Prestamo ultimo = heap[heap.Count - 1];
+            heap.RemoveAt(heap.Count - 1);
             heap.RemoveAt(heap.Count - 1);
 
             if (heap.Count > 0)
@@ -124,6 +129,9 @@ namespace ProyectoEst1
             foreach (Prestamo val in heap)
             {
                 i += 1;
+                Console.Write($"Índice {i}: ");
+                val.mostrar_datos();
+                Console.WriteLine();
                 Console.Write($"Índice {i}: ");
                 val.mostrar_datos();
                 Console.WriteLine();
