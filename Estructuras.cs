@@ -1,5 +1,6 @@
 // FUNCIONES PARA EL ARBOL B+
 using System.ComponentModel;
+using System.IO.Pipelines;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.Swift;
@@ -109,7 +110,7 @@ public class ArbolLibros //el mero Árbol B+
     private int orden;
     private int max_claves;
     private int min_claves;
-    private int min_claves_interno;
+    private int min_hijos_interno;
 
     public ArbolLibros(int orden)
     {
@@ -117,8 +118,8 @@ public class ArbolLibros //el mero Árbol B+
         this.max_claves = Aprox(orden - 1); // Calcula el número máximo de claves por nodo
         this.raiz = new Nodo(); // Inicializa la raíz del árbol
         this.min_claves = Aprox((orden - 1) / 2);
-        this.min_claves_interno = Aprox(orden / 2);
-    }   
+        this.min_hijos_interno = Aprox(orden / 2);
+    }
 
 
     public bool Vacio()
@@ -141,7 +142,7 @@ public class ArbolLibros //el mero Árbol B+
     {
         Nodo hoja = buscar_hoja(clave);
         int posc = ins_izq(hoja.claves, clave); // utliza la función para llevar a nodos hoja
-        return posc < hoja.claves.Count-1 && hoja.claves[posc] == clave; // si la posición no sobrepasa el tamaño de matriz Y la posición actual apunta a un nodo, retorna True
+        return posc < hoja.claves.Count - 1 && hoja.claves[posc] == clave; // si la posición no sobrepasa el tamaño de matriz Y la posición actual apunta a un nodo, retorna True
     }
 
     // ----- INSERCIÓN -----
@@ -157,7 +158,7 @@ public class ArbolLibros //el mero Árbol B+
         List<int> lista = hoja.claves; // se toma la lista
         List<int> izq = lista.GetRange(0, posc); // parte izquierda
         List<int> der = lista.GetRange(posc, lista.Count - posc); // parte derecha
-        izq.Insert(clave); // se pone la clave donde debe quedar
+        izq.Add(clave); // se pone la clave donde debe quedar
         hoja.claves = izq.AddRange(der); // y se concatena todo
 
         if (hoja.claves.Count > max_claves) DividirNodo(hoja);
@@ -245,7 +246,7 @@ public class ArbolLibros //el mero Árbol B+
 
         if (hoja == raiz) return true;
 
-        if (hoja.claves.Count < min_claves_interno) reparar_hoja(hoja);
+        if (hoja.claves.Count < min_hijos_interno) reparar_hoja(hoja);
         recalcular(raiz);
     }
 
@@ -261,7 +262,7 @@ public class ArbolLibros //el mero Árbol B+
         if (posc > 0) h_izq = padre.hijos[posc - 1];
         if (posc + 1 < padre.hijos.Count) h_der = padre.hijos[posc + 1];
 
-        if (h_izq != null && h_izq.claves.Count > min_claves_interno)
+        if (h_izq != null && h_izq.claves.Count > min_hijos_interno)
         {
             c_prestada = h_izq.claves[-1];
             h_izq.claves.RemoveAt(-1);
@@ -269,7 +270,7 @@ public class ArbolLibros //el mero Árbol B+
             return;
         }
 
-        if (h_der != null && h_der.claves.Count > min_claves_interno)
+        if (h_der != null && h_der.claves.Count > min_hijos_interno)
         {
             c_prestada = h_der.claves[0];
             h_der.claves.RemoveAt(0);
@@ -296,6 +297,132 @@ public class ArbolLibros //el mero Árbol B+
         reparar_interno(padre);
     }
 
-    
+    private void reparar_interno(Nodo nodo)
+    {
+        //en caso el nodo sea la raiz, si se queda sin claves el hijo ahora es raiz (sin padres)
+        if (nodo == raiz)
+        {
+            if (nodo.claves.Count == 0)
+            {
+                raiz = nodo.hijos[0];
+                raiz.padre = null;
+            }
+            return;
+        }
 
+        //de haber suficientes hijos, no ocupa repararse
+        if (nodo.hijos.Count >= min_hijos_interno) return;
+
+        // Obtiene padre y localiza nodos
+        Nodo padre = nodo.padre;
+        int posc = padre.hijos.Find(nodo);
+        Nodo izq = null;
+        Nodo der = null;
+
+        // si la posición está en rango, se definen izquierdo o derecho
+        if (posc > 0) izq = padre.hijos[posc - 1];
+        if (posc + 1 < padre.hijos.Count) der = padre.hijos[posc + 1];
+
+        // si el izq puede, baja de nivel
+        if (izq != null && izq.hijos.Count > min_hijos_interno)
+        {
+            h_movido = izq.hijos[-1];
+            izq.hijos.RemoveAt(-1);
+            h_movido.padre = nodo;
+
+            n_guia = izq.claves[-1];
+            izq.claves.RemoveAt(-1);
+
+            nodo.hijos.Insert(0, h_movido);
+            nodo.claves.Insert(0, padre.claves[posc - 1]);
+            padre.claves[posc - 1] = n_guia;
+            return;
+        }
+
+        // si el der puede, baja de nivel
+        if (der != null && der.hijos.Count > min_hijos_interno)
+        {
+            h_movido = der.hijos[0];
+            der.hijos.RemoveAt(0);
+            h_movido.padre = nodo;
+
+            nodo.hijos.Add(h_movido);
+            nodo.claves.Add(padre.claves[posc]);
+            padre.claves[posc] = der.claves[-1];
+            der.claves.RemoveAt(-1);
+            return;
+        }
+
+
+        if (izq != null)
+        {
+            izq.claves.Add(padre.claves[posc - 1]);
+            padre.claves.RemoveAt(posc - 1);
+
+            izq.claves.AddRange(nodo.claves);
+            foreach (Nodo hijo in nodo.hijos) hijo.padre = izq;
+
+            izq.hijos.AddRange(nodo.hijos);
+            padre.hijos.RemoveAt(posc);
+        }
+        else if (der != null)
+        {
+            nodo.claves.Add(padre.claves[posc]);
+            padre.claves.RemoveAt(posc);
+
+            nodo.claves.AddRange(derecho.claves);
+            foreach (Nodo hijo in derecho.hijos) hijo.padre = nodo;
+
+            nodo.hijos.AddRange(derecho.hijos);
+            padre.hijos.RemoveAt(posc + 1);
+        }
+        reparar_interno(padre);
+    }
+
+    private int min_subarbol(Nodo nodo)
+    {
+        while (!nodo.esHoja) nodo = nodo.hijos[0]; // va a la hoja más a la izquierda
+        return nodo.claves[0]; // devuelve la clave más pequeña del nodo más pequeño
+    }
+
+    private void recalcular(Nodo nodo)
+    {
+        if (nodo.esHoja) return;
+        foreach (Nodo hijo in nodo.hijos) recalcular(hijo);  // niveles inferiores
+
+        foreach (Nodo hijo in nodo.hijos.GetRange(1, nodo.hijos.Count - 1)) min_subarbol(hijo); // hijos derechos
+    }
+
+    public List<int> recorrer()
+    {
+        Nodo nodo = raiz;
+        while (!nodo.esHoja) nodo = nodo.hijos[0];
+
+        List<int> res = new List<int>[];
+
+        while (nodo != null)
+        {
+            res.AddRange(nodo.claves);
+            res = res.siguiente;
+        }
+        return res;
+    }
+
+    public void mostrar()
+    {
+        return _mostrar(raiz, 0);
+    }
+
+    private void _mostrar(Nodo nodo, int nivel)
+    {
+        sangria = "\t" * nivel;
+        if (nodo.esHoja) tipo = "Hoja";
+        else "Interno";
+        print($"{sangria}{tipo}: {nodo.claves}");
+
+        if (!nodo.esHoja)
+        {
+            foreach (Nodo hijo in nodo.hijos) _mostrar(hijo, nivel + 1);
+        }
+    }
 }
