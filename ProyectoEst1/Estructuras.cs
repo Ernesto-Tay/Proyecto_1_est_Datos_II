@@ -1,4 +1,4 @@
-namespace Estructuras
+namespace ProyectoEst1
 {
     // FUNCIONES PARA EL ARBOL B+
     public static class Utilidades
@@ -26,7 +26,7 @@ namespace Estructuras
                 {
                     min = medio + 1;
                 }
-                else max = medio;
+                else {max = medio;}
             }
             return min;
         }
@@ -42,7 +42,7 @@ namespace Estructuras
                 {
                     min = medio + 1;
                 }
-                else max = medio;
+                else {max = medio;}
             }
             return min;
         }
