@@ -1,10 +1,4 @@
 // FUNCIONES PARA EL ARBOL B+
-using System.ComponentModel;
-using System.IO.Pipelines;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.Swift;
-
 int Aprox(double x) // aproximador
 {
     n = (int)x;
