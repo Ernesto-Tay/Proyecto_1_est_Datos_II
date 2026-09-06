@@ -82,9 +82,9 @@ namespace Estructuras
 
     public class Nodo // nodo para el árbol B+
     {
-        public Libro libro { get; set; }
         public Nodo siguiente { get; set; }
         public List<int> claves { get; set; }
+        public List<Libro> libros { get; set; }
         public List<Nodo> hijos { get; set; }
         public Nodo padre { get; set; }
         public bool esHoja { get; set; }
@@ -93,6 +93,7 @@ namespace Estructuras
         {
             this.claves = new List<int>(); // Inicializa el arreglo de claves
             this.hijos = new List<Nodo>(); // Inicializa el arreglo de hijos
+            this.libros = new List<Libro>();
             this.siguiente = null; // Inicializa el puntero al siguiente nodo como null
             this.padre = null; // Inicializar el padre del nodo actual como null
             this.esHoja = esHoja; // Establece si el nodo es una hoja o no
@@ -124,6 +125,7 @@ namespace Estructuras
             return raiz == null; // Indica si el arbol está vacío
         }
 
+        //  ----- BÚSQUEDA -----
         private Nodo buscar_hoja(int codigo) // Función para llevar la posición actual al nodo hoja óptimo
         {
             Nodo actual = raiz;
@@ -142,9 +144,22 @@ namespace Estructuras
             return posc < hoja.claves.Count && hoja.claves[posc] == clave; // si la posición no sobrepasa el tamaño de matriz Y la posición actual apunta a un nodo, retorna True
         }
 
-        // ----- INSERCIÓN -----
-        public void Insertar(int clave)
+        public Libro BuscarLibro(int clave) // para buscar los libros (pues trabajamos con esas mmds, PEERO se me olvidó x,D)
         {
+            Nodo hoja = buscar_hoja(clave);
+            int posc = Utilidades.ins_izq(hoja.claves, clave);
+
+            if (posc < hoja.claves.Count && hoja.claves[posc] == clave)
+            {
+                return hoja.libros[posc]; 
+            }
+            return null; // no se encontró
+        }
+
+        // ----- INSERCIÓN -----
+        public void Insertar(Libro libro)
+        {
+            int clave = libro.codigo;
             if (buscar(clave)) // Si el libro ya existe, no se inserta
             {
                 return;
@@ -152,12 +167,21 @@ namespace Estructuras
             // se obtiene la hoja onde insertar, y se inserta en su posición respectiva
             Nodo hoja = buscar_hoja(clave);
             int posc = Utilidades.ins_der(hoja.claves, clave);
+
             List<int> lista = hoja.claves; // se toma la lista
             List<int> izq = lista.GetRange(0, posc); // parte izquierda
             List<int> der = lista.GetRange(posc, lista.Count - posc); // parte derecha
             izq.Add(clave); // se pone la clave donde debe quedar
             izq.AddRange(der); // y se concatena todo
             hoja.claves = izq;
+
+            // Literalmente lo mismo, pero ahora con los LiBriToS
+            List<Libro> listaLibros = hoja.libros;
+            List<Libro> izqLibros = listaLibros.GetRange(0, posc);
+            List<Libro> derLibros = listaLibros.GetRange(posc, listaLibros.Count - posc);
+            izqLibros.Add(libro);
+            izqLibros.AddRange(derLibros);
+            hoja.libros = izqLibros;
 
             if (hoja.claves.Count > max_claves) DividirNodo(hoja);
             recalcular(raiz);
@@ -170,7 +194,10 @@ namespace Estructuras
             Nodo n_hoja = new Nodo();
             n_hoja.padre = nodo.padre; // comparten papi
             n_hoja.claves = nodo.claves.GetRange(0, p_div);
-            nodo.claves = nodo.claves.GetRange(p_div, nodo.claves.Count - p_div); // se dividen las claves
+            nodo.claves = nodo.claves.GetRange(p_div, nodo.claves.Count - p_div); // se dividen las claves  
+            n_hoja.libros = nodo.libros.GetRange(0, p_div);
+            nodo.libros = nodo.libros.GetRange(p_div, nodo.claves.Count - p_div);
+            
 
             n_hoja.siguiente = nodo.siguiente;
             nodo.siguiente = n_hoja; // nodo -> nuevo_nodo -> siguiente
@@ -240,6 +267,7 @@ namespace Estructuras
             if (posc > hoja.claves.Count || hoja.claves[posc] != clave) return false;
 
             hoja.claves.RemoveAt(posc);
+            hoja.libros.RemoveAt(posc);
 
             if (hoja == raiz) return true;
 
@@ -265,6 +293,10 @@ namespace Estructuras
                 int c_prestada = h_izq.claves[-1];
                 h_izq.claves.RemoveAt(-1);
                 hoja.claves.Insert(0, c_prestada);
+
+                Libro l_prestado = h_izq.libros[h_izq.libros.Count - 1];
+                h_izq.libros.RemoveAt(h_izq.libros.Count - 1);
+                hoja.libros.Insert(0, l_prestado);
                 return;
             }
 
@@ -273,12 +305,16 @@ namespace Estructuras
                 int c_prestada = h_der.claves[0];
                 h_der.claves.RemoveAt(0);
                 hoja.claves.Add(c_prestada);
+                Libro l_prestado = h_der.libros[0];
+                h_der.libros.RemoveAt(0);
+                hoja.libros.Add(l_prestado);
                 return;
             }
 
             if (h_izq != null)
             {
                 h_izq.claves.AddRange(hoja.claves);
+                h_izq.libros.AddRange(hoja.libros);
                 h_izq.siguiente = hoja.siguiente;
 
                 padre.hijos.RemoveAt(posc);
@@ -287,6 +323,7 @@ namespace Estructuras
             else if (h_der != null)
             {
                 hoja.claves.AddRange(h_der.claves);
+                hoja.libros.AddRange(h_der.libros);
                 hoja.siguiente = h_der.siguiente;
 
                 padre.hijos.RemoveAt(posc + 1);
@@ -391,16 +428,16 @@ namespace Estructuras
             foreach (Nodo hijo in nodo.hijos.GetRange(1, nodo.hijos.Count - 1)) min_subarbol(hijo); // hijos derechos
         }
 
-        public List<int> recorrer()
+        public List<Libro> recorrer()
         {
             Nodo nodo = raiz;
             while (!nodo.esHoja) nodo = nodo.hijos[0];
 
-            List<int> res = new List<int>();
+            List<Libro> res = new List<Libro>();
 
             while (nodo != null)
             {
-                res.AddRange(nodo.claves);
+                res.AddRange(nodo.libros);
                 nodo = nodo.siguiente;
             }
             return res;
@@ -411,15 +448,13 @@ namespace Estructuras
             _mostrar(raiz, 0);
         }
 
-        private void _mostrar(Nodo nodo, int nivel)
+        private void _mostrar(Nodo nodo, int nivel) // muestra los nodos de forma tabulada
         {
             string sangria = new string('\t', nivel);
-            string tipo;
-            if (nodo.esHoja) tipo = "Hoja";
-            else tipo = "Interno";
+            string tipo = nodo.esHoja? "Hoja" : "Interno"; // si aprendí esta sintaxis para algo la voy a usar
             Console.WriteLine($"{sangria}{tipo}: {string.Join(",",nodo.claves)}");
 
-            if (!nodo.esHoja)
+            if (!nodo.esHoja) // Expande la impresión cada que no se acceda a un nodo hoja
             {
                 foreach (Nodo hijo in nodo.hijos) _mostrar(hijo, nivel + 1);
             }
