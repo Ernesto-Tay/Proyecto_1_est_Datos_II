@@ -1,4 +1,4 @@
-namespace Estructuras_Bplus
+namespace Estructuras
 {
     // FUNCIONES PARA EL ARBOL B+
     int Aprox(double x) // aproximador
