@@ -1,52 +1,53 @@
 namespace Estructuras
 {
     // FUNCIONES PARA EL ARBOL B+
-    int Aprox(double x) // aproximador
+    public static class Utilidades
     {
-        n = (int)x;
-        if (x == n)
+        public static int Aprox(double x) // Utilidades.Aproximador
         {
-            return n; // si son iguales, retorna el número convertido
+            int n = (int)x;
+            if (x == n)
+            {
+                return n; // si son iguales, retorna el número convertido
+            }
+            else
+            {
+                return n + 1; // si no lo son, le suma 1 par Utilidades.Aproximar y no quedar truncado
+            }
         }
-        else
+        public static int ins_izq(List<int> lista, int buscado)  // obtiene la posición más a la izquierda de todas las istnacias encotradas del valor buscado
         {
-            return n + 1; // si no lo son, le suma 1 par aproximar y no quedar truncado
+            int max = lista.Count;
+            int min = 0;
+            while (min < max)
+            {
+                int medio = (max + min) / 2; // busca la mitad de la lista actual
+                if (lista[medio] < buscado) // siempre que el medio sea menor al buscado, se va al bloque derecho
+                {
+                    min = medio + 1;
+                }
+                else max = medio;
+            }
+            return min;
+        }
+
+        public static int ins_der(List<int> lista, int buscado) // obtiene la posición más a la derecha de todas las instancias aparecidas en el valor buscado
+        {
+            int max = lista.Count - 1;
+            int min = 0;
+            while (min < max)
+            {
+                int medio = (max + min) / 2;
+                if (lista[medio] <= buscado) // si el medio es menor O IGUAL al buscado, se toma el bloque derecho (para ir al valor más a la derecha que exista)
+                {
+                    min = medio + 1;
+                }
+                else max = medio;
+            }
+            return min;
         }
     }
 
-    // estas madres usan búsqueda binaria y yo ni en cuenta ;-;
-    // buscar el valor más a la derecha 
-    int ins_izq(int[] lista, int buscado)  // obtiene la posición más a la izquierda de todas las istnacias encotradas del valor buscado
-    {
-        int max = lista.Count;
-        int min = 0;
-        while (min < max)
-        {
-            int medio = (max + min) / 2; // busca la mitad de la lista actual
-            if (lista[medio] < buscado) // siempre que el medio sea menor al buscado, se va al bloque derecho
-            {
-                min = medio + 1;
-            }
-            else max = medio;
-        }
-        return min;
-    }
-
-    int ins_der(int[] lista, int buscado) // obtiene la posición más a la derecha de todas las instancias aparecidas en el valor buscado
-    {
-        int max = lista.Count - 1;
-        int min = 0;
-        while (min < max)
-        {
-            int medio = (max + min) / 2;
-            if (lista[medio] <= buscado) // si el medio es menor O IGUAL al buscado, se toma el bloque derecho (para ir al valor más a la derecha que exista)
-            {
-                min = medio + 1;
-            }
-            else max = medio;
-        }
-        return min;
-    }
 
 
     public class Libro // la clase del libro (así todo queda bien organizado)
@@ -90,8 +91,8 @@ namespace Estructuras
 
         public Nodo(bool esHoja = true)
         {
-            this.Claves = new List<int>(); // Inicializa el arreglo de claves
-            this.Valores = new List<Nodo>(); // Inicializa el arreglo de valores
+            this.claves = new List<int>(); // Inicializa el arreglo de claves
+            this.hijos = new List<Nodo>(); // Inicializa el arreglo de hijos
             this.siguiente = null; // Inicializa el puntero al siguiente nodo como null
             this.padre = null; // Inicializar el padre del nodo actual como null
             this.esHoja = esHoja; // Establece si el nodo es una hoja o no
@@ -111,10 +112,10 @@ namespace Estructuras
         public ArbolLibros(int orden)
         {
             this.orden = orden;
-            this.max_claves = Aprox(orden - 1); // Calcula el número máximo de claves por nodo
+            this.max_claves = Utilidades.Aprox(orden - 1); // Calcula el número máximo de claves por nodo
             this.raiz = new Nodo(); // Inicializa la raíz del árbol
-            this.min_claves = Aprox((orden - 1) / 2);
-            this.min_hijos_interno = Aprox(orden / 2);
+            this.min_claves = Utilidades.Aprox((orden - 1) / 2);
+            this.min_hijos_interno = Utilidades.Aprox(orden / 2);
         }
 
 
@@ -128,8 +129,8 @@ namespace Estructuras
             Nodo actual = raiz;
             while (!actual.esHoja) // siempre y cuando el nodo actual no sea una hoja...
             {
-                int posicion = ins_der(actual.claves);
-                Nodo actual = actual.hijos[posicion]; // actualiza la posición para el último nodo con clave coincidente, y busca en ese nodo tmb
+                int posicion = Utilidades.ins_der(actual.claves, codigo);
+                actual = actual.hijos[posicion]; // actualiza la posición para el último nodo con clave coincidente, y busca en ese nodo tmb
             }
             return actual;
         }
@@ -137,8 +138,8 @@ namespace Estructuras
         public bool buscar(int clave) // busca si existe un nodo con definida clave
         {
             Nodo hoja = buscar_hoja(clave);
-            int posc = ins_izq(hoja.claves, clave); // utliza la función para llevar a nodos hoja
-            return posc < hoja.claves.Count - 1 && hoja.claves[posc] == clave; // si la posición no sobrepasa el tamaño de matriz Y la posición actual apunta a un nodo, retorna True
+            int posc = Utilidades.ins_izq(hoja.claves, clave); // utliza la función para llevar a nodos hoja
+            return posc < hoja.claves.Count && hoja.claves[posc] == clave; // si la posición no sobrepasa el tamaño de matriz Y la posición actual apunta a un nodo, retorna True
         }
 
         // ----- INSERCIÓN -----
@@ -150,12 +151,13 @@ namespace Estructuras
             }
             // se obtiene la hoja onde insertar, y se inserta en su posición respectiva
             Nodo hoja = buscar_hoja(clave);
-            int posc = ins_der(hoja.claves, clave);
+            int posc = Utilidades.ins_der(hoja.claves, clave);
             List<int> lista = hoja.claves; // se toma la lista
             List<int> izq = lista.GetRange(0, posc); // parte izquierda
             List<int> der = lista.GetRange(posc, lista.Count - posc); // parte derecha
             izq.Add(clave); // se pone la clave donde debe quedar
-            hoja.claves = izq.AddRange(der); // y se concatena todo
+            izq.AddRange(der); // y se concatena todo
+            hoja.claves = izq;
 
             if (hoja.claves.Count > max_claves) DividirNodo(hoja);
             recalcular(raiz);
@@ -163,10 +165,9 @@ namespace Estructuras
 
         private void DividirNodo(Nodo nodo) // proceso de división
         {
-            p_div = (nodo.claves.Count + 1) / 2;
-            p_div = Convert.ToInt32(p_div); // calcula punto de división y lo convierte a entero
+            int p_div = (nodo.claves.Count + 1) / 2;
 
-            Nodo n_hoja = Nodo();
+            Nodo n_hoja = new Nodo();
             n_hoja.padre = nodo.padre; // comparten papi
             n_hoja.claves = nodo.claves.GetRange(0, p_div);
             nodo.claves = nodo.claves.GetRange(p_div, nodo.claves.Count - p_div); // se dividen las claves
@@ -182,10 +183,10 @@ namespace Estructuras
         {
             if (izq == raiz) // caso 1 - la raíz se divide
             {
-                n_raiz = Nodo(false); //nueva raíz
-                n_raiz.claves.Insert(-1, guia);
-                n_raiz.hijos.Insert(-1, izq);
-                n_raiz.hijos.Insert(-1, der); // se actualizan guías y hojas
+                Nodo n_raiz = new Nodo(false); //nueva raíz
+                n_raiz.claves.Add(guia);
+                n_raiz.hijos.Add(izq);
+                n_raiz.hijos.Add(der); // se actualizan guías y hojas
 
                 // se actualizan referencias
                 izq.padre = n_raiz;
@@ -196,7 +197,7 @@ namespace Estructuras
 
             // recupera padre y localiza hijo dividido
             Nodo padre = izq.padre;
-            int posicion = padre.hijos.Find(izq);
+            int posicion = padre.hijos.IndexOf(izq);
 
             // completa información del nuevo padre
             padre.claves.Insert(posicion, guia);
@@ -209,10 +210,10 @@ namespace Estructuras
 
         private void division_interna(Nodo nodo)
         {
-            p_div = nodo.claves.Count / 2;
-            ascendido = nodo.claves[p_div];
+            int p_div = nodo.claves.Count / 2;
+            int ascendido = nodo.claves[p_div];
 
-            n_interno = Nodo();
+            Nodo n_interno = Nodo();
             n_interno.padre = nodo.padre;
 
             n_interno.claves = nodo.claves.GetRange(p_div + 1, nodo.claves.Count - p_div - 1);
@@ -224,7 +225,7 @@ namespace Estructuras
             }
 
             nodo.claves = nodo.claves.GetRange(0, p_div);
-            nodo.hijos = nodo.claves.GetRange(0, p_div + 1);
+            nodo.hijos = nodo.hijos.GetRange(0, p_div + 1);
 
             ins_padre(nodo, ascendido, n_interno);
         }
@@ -233,7 +234,7 @@ namespace Estructuras
         {
             // busca hoja y posición
             Nodo hoja = buscar_hoja(clave);
-            int posc = ins_izq(hoja.claves, clave);
+            int posc = Utilidades.ins_izq(hoja.claves, clave);
 
             //caso 1: clave inexistente
             if (posc > hoja.claves.Count || hoja.claves[posc] != clave) return false;
@@ -244,15 +245,16 @@ namespace Estructuras
 
             if (hoja.claves.Count < min_hijos_interno) reparar_hoja(hoja);
             recalcular(raiz);
+            return true;
         }
 
         private void reparar_hoja(Nodo hoja)
         {
             // OBTIENE papá y hoja
             Nodo padre = hoja.padre;
-            int posc = padre.hijos.Find(hoja);
-            h_izq = null;
-            h_der = null;
+            int posc = padre.hijos.IndexOf(hoja);
+            Nodo h_izq = null;
+            Nodo h_der = null;
 
             // define hermanos si están en rango
             if (posc > 0) h_izq = padre.hijos[posc - 1];
@@ -260,7 +262,7 @@ namespace Estructuras
 
             if (h_izq != null && h_izq.claves.Count > min_hijos_interno)
             {
-                c_prestada = h_izq.claves[-1];
+                int c_prestada = h_izq.claves[-1];
                 h_izq.claves.RemoveAt(-1);
                 hoja.claves.Insert(0, c_prestada);
                 return;
@@ -268,7 +270,7 @@ namespace Estructuras
 
             if (h_der != null && h_der.claves.Count > min_hijos_interno)
             {
-                c_prestada = h_der.claves[0];
+                int c_prestada = h_der.claves[0];
                 h_der.claves.RemoveAt(0);
                 hoja.claves.Add(c_prestada);
                 return;
@@ -311,7 +313,7 @@ namespace Estructuras
 
             // Obtiene padre y localiza nodos
             Nodo padre = nodo.padre;
-            int posc = padre.hijos.Find(nodo);
+            int posc = padre.hijos.IndexOf(nodo);
             Nodo izq = null;
             Nodo der = null;
 
@@ -322,12 +324,12 @@ namespace Estructuras
             // si el izq puede, baja de nivel
             if (izq != null && izq.hijos.Count > min_hijos_interno)
             {
-                h_movido = izq.hijos[-1];
-                izq.hijos.RemoveAt(-1);
+                Nodo h_movido = izq.hijos[izq.hijos.Count - 1];
+                izq.hijos.RemoveAt(izq.hijos.Count-1);
                 h_movido.padre = nodo;
 
-                n_guia = izq.claves[-1];
-                izq.claves.RemoveAt(-1);
+                int n_guia = izq.claves[izq.claves.Count - 1];
+                izq.claves.RemoveAt(izq.claves.Count-1);
 
                 nodo.hijos.Insert(0, h_movido);
                 nodo.claves.Insert(0, padre.claves[posc - 1]);
@@ -338,14 +340,14 @@ namespace Estructuras
             // si el der puede, baja de nivel
             if (der != null && der.hijos.Count > min_hijos_interno)
             {
-                h_movido = der.hijos[0];
+                Nodo h_movido = der.hijos[0];
                 der.hijos.RemoveAt(0);
                 h_movido.padre = nodo;
 
                 nodo.hijos.Add(h_movido);
                 nodo.claves.Add(padre.claves[posc]);
-                padre.claves[posc] = der.claves[-1];
-                der.claves.RemoveAt(-1);
+                padre.claves[posc] = der.claves[der.claves.Count - 1];
+                der.claves.RemoveAt(der.claves.Count-1);
                 return;
             }
 
@@ -366,10 +368,10 @@ namespace Estructuras
                 nodo.claves.Add(padre.claves[posc]);
                 padre.claves.RemoveAt(posc);
 
-                nodo.claves.AddRange(derecho.claves);
-                foreach (Nodo hijo in derecho.hijos) hijo.padre = nodo;
+                nodo.claves.AddRange(der.claves);
+                foreach (Nodo hijo in der.hijos) hijo.padre = nodo;
 
-                nodo.hijos.AddRange(derecho.hijos);
+                nodo.hijos.AddRange(der.hijos);
                 padre.hijos.RemoveAt(posc + 1);
             }
             reparar_interno(padre);
@@ -394,27 +396,30 @@ namespace Estructuras
             Nodo nodo = raiz;
             while (!nodo.esHoja) nodo = nodo.hijos[0];
 
-            List<int> res = new List<int>[];
+            List<int> res = new List<int>();
 
             while (nodo != null)
             {
                 res.AddRange(nodo.claves);
-                res = res.siguiente;
+                nodo = nodo.siguiente;
             }
             return res;
         }
 
         public void mostrar()
         {
-            return _mostrar(raiz, 0);
+            _mostrar(raiz, 0);
         }
 
         private void _mostrar(Nodo nodo, int nivel)
         {
-            sangria = "\t" * nivel;
+            string sangria = "\t";
+            string s_total;
+            for (i=0; i<nivel; ins_padre++) s_total = s_total + sangria;
+            string tipo;
             if (nodo.esHoja) tipo = "Hoja";
-            else "Interno";
-            print($"{sangria}{tipo}: {nodo.claves}");
+            else tipo = "Interno";
+            Console.WriteLine($"{s_total}{tipo}: {nodo.claves}");
 
             if (!nodo.esHoja)
             {

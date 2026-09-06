@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj": {}
+    "c:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj": {
+    "c:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj",
+        "projectUniqueName": "c:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj",
         "projectName": "ProyectoEst1",
-        "projectPath": "C:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj",
+        "projectPath": "c:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\ProyectoEst1.csproj",
         "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\obj\\",
+        "outputPath": "c:\\Users\\ASUS\\OneDrive - Universidad Rafael Landivar\\Documentos\\progra\\Uni\\Semestre IV\\Python\\Proyecto_1_est_Datos_II\\ProyectoEst1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config"
