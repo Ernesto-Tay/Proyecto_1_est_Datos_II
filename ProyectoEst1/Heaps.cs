@@ -130,8 +130,14 @@ namespace ProyectoEst1
             }
         }
 
+        public List<Prestamo> recorrer()
+        {
+            return heap;
+        }
+
     }
 }   
+
 
 
 

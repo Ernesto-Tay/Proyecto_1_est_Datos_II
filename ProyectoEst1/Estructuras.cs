@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 namespace ProyectoEst1
 {
     // FUNCIONES PARA EL ARBOL B+
@@ -86,6 +87,8 @@ namespace ProyectoEst1
         public List<int> claves { get; set; }
         public List<Libro> libros { get; set; }
         public List<Nodo> hijos { get; set; }
+
+        [JsonIgnore] // se ignora en el serializador del JSON para evitar errores
         public Nodo padre { get; set; }
         public bool esHoja { get; set; }
 
