@@ -1,18 +1,7 @@
-using System.Runtime.InteropServices.Swift;
-
+using System;
+using System.Collections.Generic;
 namespace ProyectoEst1
 {
-    class MaxHeapNodo
-    {
-        public int prioridad { get; set; }
-        public Libro libro { get; set; }
-
-        public MaxHeapNodo(int prior)
-        {
-            this.prioridad = prioridad;
-        }
-    }
-
     class Prestamo
     {
         public List<int> libros_prestados = new List<int>(); // aquí estarán los códigos
@@ -84,6 +73,7 @@ namespace ProyectoEst1
                     Prestamo b = heap[max];
                     heap[index] = b;
                     heap[max] = a;
+                    index = max;
                 }
                 else {break;}
             }
@@ -92,6 +82,7 @@ namespace ProyectoEst1
         public void agregar(List<int> codigos, List<int> cantidades) // agrega un nuevo préstamo a la lista
         {
             Prestamo nuevo = new Prestamo(codigos, cantidades);
+            nuevo.EstablecerPrioridad();
             heap.Add(nuevo);
             heapify_up(heap.Count - 1);
         }
@@ -110,6 +101,7 @@ namespace ProyectoEst1
             if (heap.Count == 0) return null;
             Prestamo raiz = heap[0];
             Prestamo ultimo = heap[heap.Count - 1];
+            heap.RemoveAt(heap.Count - 1);
 
             if (heap.Count > 0)
             {
@@ -132,10 +124,12 @@ namespace ProyectoEst1
             foreach (Prestamo val in heap)
             {
                 i += 1;
-                Console.WriteLine($"Índice {i}: {val.mostrar_datos}");
+                Console.Write($"Índice {i}: ");
+                val.mostrar_datos();
+                Console.WriteLine();
             }
         }
-        
+
     }
 }   
 
