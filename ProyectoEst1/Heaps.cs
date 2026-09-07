@@ -198,14 +198,13 @@ class Admin_libros
             }
         }
 
-        public void agregar(int codigo, string titulo, string autor, string genero, int copias, int veces_prestado) // agrega un nuevo préstamo a la lista
+        public void agregar(Libro nuevo) // agrega un nuevo libro a la lista
         {
-            Libro nuevo = new Libro(codigo, titulo, autor, genero, copias, veces_prestado);
             heap.Add(nuevo);
             heapify_up(heap.Count - 1);
         }
 
-        public Libro? consultar() // Consulta el siguiente en atender
+        public Libro? consultar() // Consulta el siguiente en el ranking (top 2)
         {
             if (heap.Count == 0)
             {
@@ -214,21 +213,16 @@ class Admin_libros
             return heap[0];
         }
 
-        public Libro? atender() // atiende el préstamo actual, y reordena con heapify_down
-        {
-            if (heap.Count == 0) return null;
-            Libro raiz = heap[0];
-            Libro ultimo = heap[heap.Count - 1];
-            heap.RemoveAt(heap.Count - 1);
-            if (heap.Count > 0)
-            {
-                heap[0] = ultimo;
-                heapify_down(0);
-            }
-            return raiz;
-        }
 
-        public void mostrar_cola()
+        public List<Libro> mostrar_ranking()
+        {
+            List<Libro> copia = new List<Libro>(heap);
+            copia.Sort((a, b) => -a.veces_prestado.CompareTo(b.veces_prestado));
+            return copia;
+        }
+        
+
+        public void mostrar_cola() // muestra la cola de libros
         {
             if (heap.Count == 0)
             {
@@ -247,20 +241,15 @@ class Admin_libros
             }
         }
 
-        public List<Libro> recorrer()
+        public List<Libro> recorrer() // devuelve el heap actual de libros
         {
             return heap;
         }
+        public void upd_prioridad(Libro libro)
+        {
+            int index = heap.IndexOf(libro);
+            if (index == -1) return;
+            heapify_up(index);
+        }
     }
 }   
-
-
-
-
-
-
-
-
-
-
-

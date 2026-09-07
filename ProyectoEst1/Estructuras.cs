@@ -448,10 +448,10 @@ namespace ProyectoEst1
 
         public void mostrar()
         {
-            _mostrar(raiz, 0);
+            _mostrar_estructura(raiz, 0);
         }
 
-        private void _mostrar(Nodo nodo, int nivel) // muestra los nodos de forma tabulada
+        private void _mostrar_estructura(Nodo nodo, int nivel) // muestra los nodos de forma tabulada
         {
             string sangria = new string('\t', nivel);
             string tipo = nodo.esHoja? "Hoja" : "Interno"; // si aprendí esta sintaxis para algo la voy a usar
@@ -459,8 +459,31 @@ namespace ProyectoEst1
 
             if (!nodo.esHoja) // Expande la impresión cada que no se acceda a un nodo hoja
             {
-                foreach (Nodo hijo in nodo.hijos) _mostrar(hijo, nivel + 1);
+                foreach (Nodo hijo in nodo.hijos) _mostrar_estructura(hijo, nivel + 1);
+            }
+        }
+
+        public void mostrar2() // para mostrar los libros de forma ordenada (descendente) según títulos
+        {
+            Nodo nodo_actual = raiz;
+            while (!nodo_actual.esHoja) nodo_actual = nodo_actual.hijos[0]; // va a la hoja menor
+            List<Libro> libs = new List<Libro>();
+            while (nodo_actual.siguiente != null)
+            {
+                libs.AddRange(nodo_actual.libros);
+                nodo_actual = nodo_actual.siguiente; // llena la lista con todos los nodos existentes
+            }
+            libs.Sort((a, b) => a.titulo.CompareTo(b.titulo)); // ordena la lista con un lambda simulado (compara títulos para el criterio de ordenamiento)
+            mostrar_por_titulo(libs);
+        }
+
+        private void mostrar_por_titulo(List<Libro> lista_libs)
+        {
+            Console.WriteLine("\nCODIGO\t\tTITULO\t\tAUTOR\tGÉNERO\tCOPIAS\tVECES PRESTADO");
+            foreach (Libro lib in lista_libs)
+            {
+                Console.WriteLine($"{lib.codigo}\t{lib.titulo}\t{lib.autor}\t{lib.genero}\t{lib.copias}\t{lib.veces_prestado}");
             }
         }
     }
-}
+}   
