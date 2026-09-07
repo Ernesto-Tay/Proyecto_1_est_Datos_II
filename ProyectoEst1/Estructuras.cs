@@ -199,7 +199,7 @@ namespace ProyectoEst1
             n_hoja.claves = nodo.claves.GetRange(0, p_div);
             nodo.claves = nodo.claves.GetRange(p_div, nodo.claves.Count - p_div); // se dividen las claves  
             n_hoja.libros = nodo.libros.GetRange(0, p_div);
-            nodo.libros = nodo.libros.GetRange(p_div, nodo.claves.Count - p_div);
+            nodo.libros = nodo.libros.GetRange(p_div, nodo.libros.Count - p_div);
             
 
             n_hoja.siguiente = nodo.siguiente;
@@ -293,8 +293,8 @@ namespace ProyectoEst1
 
             if (h_izq != null && h_izq.claves.Count > min_hijos_interno)
             {
-                int c_prestada = h_izq.claves[-1];
-                h_izq.claves.RemoveAt(-1);
+                int c_prestada = h_izq.claves[h_izq.claves.Count - 1];
+                h_izq.claves.RemoveAt(h_izq.claves.Count - 1);
                 hoja.claves.Insert(0, c_prestada);
 
                 Libro l_prestado = h_izq.libros[h_izq.libros.Count - 1];
@@ -428,7 +428,8 @@ namespace ProyectoEst1
             if (nodo.esHoja) return;
             foreach (Nodo hijo in nodo.hijos) recalcular(hijo);  // niveles inferiores
 
-            foreach (Nodo hijo in nodo.hijos.GetRange(1, nodo.hijos.Count - 1)) min_subarbol(hijo); // hijos derechos
+            for (int i = 1; i < nodo.hijos.Count; i++)
+                nodo.claves[i - 1] = min_subarbol(nodo.hijos[i]);
         }
 
         public List<Libro> recorrer()
@@ -454,15 +455,11 @@ namespace ProyectoEst1
         private void _mostrar_estructura() // muestra los nodos para los préstamos
         {
             Nodo nodo = raiz;
-                if (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
-               while (true) {
+                while (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
+               while (nodo.siguiente != null) {
                 Console.WriteLine("CODIGO\tTITULO\t\tCANTIDAD");
-                
-                    foreach (Nodo hijo in nodo.hijos) // accede a los hijos en cada nodo hoja
-                    {
-                        // muestra la info de los libros que se encuentran en cada hijo
-                        foreach (Libro libro in hijo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo}\t\t{libro.copias}");
-                    }
+                    // muestra la info de los libros que se encuentran en cada hoja
+                    foreach (Libro libro in nodo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo}\t\t{libro.copias}");
                 nodo = nodo.siguiente;
                 
             }
@@ -473,7 +470,7 @@ namespace ProyectoEst1
             Nodo nodo_actual = raiz;
             while (!nodo_actual.esHoja) nodo_actual = nodo_actual.hijos[0]; // va a la hoja menor
             List<Libro> libs = new List<Libro>();
-            while (nodo_actual.siguiente != null)
+            while (nodo_actual != null)
             {
                 libs.AddRange(nodo_actual.libros);
                 nodo_actual = nodo_actual.siguiente; // llena la lista con todos los nodos existentes
