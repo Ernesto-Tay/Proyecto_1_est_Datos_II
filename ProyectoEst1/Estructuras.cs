@@ -446,20 +446,25 @@ namespace ProyectoEst1
             return res;
         }
 
-        public void mostrar()
+        public void mostrar_pa_prestamo()
         {
-            _mostrar_estructura(raiz, 0);
+            _mostrar_estructura();
         }
 
-        private void _mostrar_estructura(Nodo nodo, int nivel) // muestra los nodos de forma tabulada
+        private void _mostrar_estructura() // muestra los nodos para los préstamos
         {
-            string sangria = new string('\t', nivel);
-            string tipo = nodo.esHoja? "Hoja" : "Interno"; // si aprendí esta sintaxis para algo la voy a usar
-            Console.WriteLine($"{sangria}{tipo}: {string.Join(",",nodo.claves)}");
-
-            if (!nodo.esHoja) // Expande la impresión cada que no se acceda a un nodo hoja
-            {
-                foreach (Nodo hijo in nodo.hijos) _mostrar_estructura(hijo, nivel + 1);
+            Nodo nodo = raiz;
+                if (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
+               while (true) {
+                Console.WriteLine("CODIGO\tTITULO\t\tCANTIDAD");
+                
+                    foreach (Nodo hijo in nodo.hijos) // accede a los hijos en cada nodo hoja
+                    {
+                        // muestra la info de los libros que se encuentran en cada hijo
+                        foreach (Libro libro in hijo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo}\t\t{libro.copias}");
+                    }
+                nodo = nodo.siguiente;
+                
             }
         }
 
@@ -485,5 +490,13 @@ namespace ProyectoEst1
                 Console.WriteLine($"{lib.codigo}\t{lib.titulo}\t{lib.autor}\t{lib.genero}\t{lib.copias}\t{lib.veces_prestado}");
             }
         }
+        public void actualizar_stock(List<int> codigos, List<int> cantidades)
+        {
+            for (int i = 0; i < codigos.Count(); i++)
+            {
+                Libro lib = BuscarLibro(codigos[i]);
+                if (lib != null) lib.copias -= cantidades[i];
+            }
+        }
     }
-}   
+}

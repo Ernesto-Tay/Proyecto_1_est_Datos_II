@@ -33,8 +33,8 @@ namespace ProyectoEst1
         private List<Prestamo> heap = new List<Prestamo>();
 
         // Funciones para obtener a los cercanos rápidamente
-        private int padre(int indx){return (indx-1)/2;}
-        private int izq(int indx){return 2*indx + 1;}
+        private int padre(int indx) { return (indx - 1) / 2; }
+        private int izq(int indx) { return 2 * indx + 1; }
         private int der(int indx) { return 2 * indx + 2; }
 
         private void heapify_up(int index) // función para 
@@ -50,13 +50,13 @@ namespace ProyectoEst1
                     heap[papa] = a;
                     index = papa;
                 }
-                else {break;}
+                else { break; }
 
             } while (index > 0);
         }
 
         private void heapify_down(int index)
-        { 
+        {
             int n = heap.Count;
             while (true)
             {
@@ -75,7 +75,7 @@ namespace ProyectoEst1
                     heap[min] = a;
                     index = min;
                 }
-                else {break;}
+                else { break; }
             }
         }
 
@@ -147,13 +147,13 @@ namespace ProyectoEst1
         }
     }
 
-class Admin_libros
+    class Admin_libros
     {
         private List<Libro> heap = new List<Libro>();
 
         // Funciones para obtener a los cercanos rápidamente
-        private int padre(int indx){return (indx-1)/2;}
-        private int izq(int indx){return 2*indx + 1;}
+        private int padre(int indx) { return (indx - 1) / 2; }
+        private int izq(int indx) { return 2 * indx + 1; }
         private int der(int indx) { return 2 * indx + 2; }
 
         private void heapify_up(int index) // función para 
@@ -169,13 +169,13 @@ class Admin_libros
                     heap[papa] = a;
                     index = papa;
                 }
-                else {break;}
+                else { break; }
 
             } while (index > 0);
         }
 
         private void heapify_down(int index)
-        { 
+        {
             int n = heap.Count;
             while (true)
             {
@@ -194,7 +194,7 @@ class Admin_libros
                     heap[max] = a;
                     index = max;
                 }
-                else {break;}
+                else { break; }
             }
         }
 
@@ -220,7 +220,7 @@ class Admin_libros
             copia.Sort((a, b) => -a.veces_prestado.CompareTo(b.veces_prestado));
             return copia;
         }
-        
+
 
         public void mostrar_cola() // muestra la cola de libros
         {
@@ -250,6 +250,16 @@ class Admin_libros
             int index = heap.IndexOf(libro);
             if (index == -1) return;
             heapify_up(index);
+        }
+        public void bye_libro(int codigo) // FUNCIÓN para eliminar un libro elimiando en el arbol, y estar en sintonía
+        {
+
+            int index = heap.IndexOf // 2. luego encontramos su índice
+                (
+                    heap.Find(lib => lib.codigo == codigo) // 1. primero encontramos el valor con Lambda
+                );
+            heap.RemoveAt(index); // 3. se elimina el valor
+            heapify_down(index); // 4. y se reordena el arbolito
         }
     }
 }   
