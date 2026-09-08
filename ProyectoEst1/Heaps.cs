@@ -4,13 +4,16 @@ namespace ProyectoEst1
 {
     class Prestamo
     {
-        public List<int> libros_prestados = new List<int>(); // aquí estarán los códigos
-        public List<int> cantidad_prestada = new List<int>(); // y aquí las cantidades
+        public string destinatario { get; set; }
+        public List<int> libros_prestados { get; set; } // aquí estarán los códigos
+        public List<int> cantidad_prestada { get; set; } // y aquí las cantidades
         public int prioridad { get; set; }
         public Prestamo(List<int> Libros, List<int> cantidades)
         {
+            this.destinatario = "";
             this.libros_prestados = Libros;
             this.cantidad_prestada = cantidades;
+            this.prioridad = 0;
         }
         public void EstablecerPrioridad()
         {
@@ -21,6 +24,7 @@ namespace ProyectoEst1
 
         public void mostrar_datos()
         {
+            Console.WriteLine($"Prestador: {destinatario}");
             for (int i = 0; i < libros_prestados.Count; i++)
             {
                 Console.Write($"código: {libros_prestados[i]} - {cantidad_prestada[i]} und. | ");
@@ -79,16 +83,18 @@ namespace ProyectoEst1
             }
         }
 
-        public void agregar(List<int> codigos, List<int> cantidades) // agrega un nuevo préstamo a la lista
+        public bool agregar(List<int> codigos, List<int> cantidades, string dest) // agrega un nuevo préstamo a la lista
         {
             Prestamo nuevo = new Prestamo(codigos, cantidades);
-            if (!Buscar(nuevo))
+            nuevo.destinatario = dest;
+            if (Buscar(nuevo))
             {
-                return;
+                return false;
             }
             nuevo.EstablecerPrioridad();
             heap.Add(nuevo);
             heapify_up(heap.Count - 1);
+            return true;
         }
 
         public Prestamo? consultar() // Consulta el siguiente en atender
@@ -121,7 +127,7 @@ namespace ProyectoEst1
                 Console.WriteLine("La cola está vacía");
                 return;
             }
-                            Console.ForegroundColor = ConsoleColor.DarkCyan;
+                            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("--------------- Cola actual ---------------");
             Console.ResetColor();
             int i = 0;
@@ -138,21 +144,37 @@ namespace ProyectoEst1
         {
             return heap;
         }
-        public Prestamo? Prestado(int codigo)
+        public List<Prestamo>? Prestado(int codigo)
         {
+            List<Prestamo> prestados = new List<Prestamo>();
             foreach (Prestamo prestamo in heap)
             {
                 if (prestamo.libros_prestados.Contains(codigo))
                 {
 
-                    return prestamo;
+                    prestados.Add(prestamo);
                 }
             }
+            if (prestados.Count > 0) return prestados;
             return null;
         }
         public bool Buscar(Prestamo p)
         {
-            return heap.IndexOf(p) == -1;
+            foreach (Prestamo existente in heap)
+            {
+                if (existente.destinatario == p.destinatario && ListasIguales(existente.libros_prestados, p.libros_prestados) && ListasIguales(existente.cantidad_prestada, p.cantidad_prestada)) {return true;}
+            }
+            return false;
+        }
+
+        private bool ListasIguales(List<int> a, List<int> b)
+        {
+            if (a.Count != b.Count) return false;
+            for (int i = 0; i < a.Count; i++)
+            {
+                if (a[i] != b[i]) return false;
+            }
+            return true;
         }
     }
 

@@ -73,7 +73,7 @@ namespace ProyectoEst1
             {
                 string json = File.ReadAllText("Prestamos.json"); // obtiene la carpeta completa
                 List<Prestamo> prestamos = JsonSerializer.Deserialize<List<Prestamo>>(json);
-                foreach (Prestamo prestamo in prestamos) admin.agregar(prestamo.libros_prestados, prestamo.cantidad_prestada); // deserializa y agrega cada préstamo al heap
+                foreach (Prestamo prestamo in prestamos) admin.agregar(prestamo.libros_prestados, prestamo.cantidad_prestada, prestamo.destinatario); // deserializa y agrega cada préstamo al heap
             }
             catch (JsonException ex)
             {

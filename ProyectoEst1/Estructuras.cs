@@ -34,7 +34,7 @@ namespace ProyectoEst1
 
         public static int ins_der(List<int> lista, int buscado) // obtiene la posición más a la derecha de todas las instancias aparecidas en el valor buscado
         {
-            int max = lista.Count - 1;
+            int max = lista.Count;
             int min = 0;
             while (min < max)
             {
@@ -194,19 +194,22 @@ namespace ProyectoEst1
         private void DividirNodo(Nodo nodo) // proceso de división
         {
             int p_div = (nodo.claves.Count + 1) / 2;
+            int totalClaves = nodo.claves.Count;   // guardamos el total ANTES de tocar nada
+            int totalLibros = nodo.libros.Count;
 
             Nodo n_hoja = new Nodo();
             n_hoja.padre = nodo.padre; // comparten papi
-            n_hoja.claves = nodo.claves.GetRange(0, p_div);
-            nodo.claves = nodo.claves.GetRange(p_div, nodo.claves.Count - p_div); // se dividen las claves  
-            n_hoja.libros = nodo.libros.GetRange(0, p_div);
-            nodo.libros = nodo.libros.GetRange(p_div, nodo.libros.Count - p_div);
+
+            n_hoja.claves = nodo.claves.GetRange(p_div, totalClaves- p_div); // se dividen las claves  
+            n_hoja.libros = nodo.libros.GetRange(p_div, totalLibros - p_div);
             
+            nodo.claves = nodo.claves.GetRange(0, p_div);
+            nodo.libros = nodo.libros.GetRange(0, p_div);
 
             n_hoja.siguiente = nodo.siguiente;
             nodo.siguiente = n_hoja; // nodo -> nuevo_nodo -> siguiente
 
-            int c_guia = n_hoja.claves[0]; //clave guía para siguientes operatorias
+            int c_guia = n_hoja.claves[0]; //clave guía para siguientes operatorias - linea 211
             ins_padre(nodo, c_guia, n_hoja);
         }
 
@@ -456,12 +459,11 @@ namespace ProyectoEst1
         private void _mostrar_estructura() // muestra los nodos para los préstamos
         {
             Nodo nodo = raiz;
-                while (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
-               while (nodo != null) {
-                                Console.ForegroundColor = ConsoleColor.Blue;
-
+            while (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine($"CODIGO\t{"TITULO".PadRight(30, ' ')}\tCANTIDAD");
                 Console.ResetColor();
+               while (nodo != null) {
                     // muestra la info de los libros que se encuentran en cada hoja
                     foreach (Libro libro in nodo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo.PadRight(30, ' ')}\t{libro.copias}");
                 nodo = nodo.siguiente;
@@ -487,19 +489,26 @@ namespace ProyectoEst1
         {
                             Console.ForegroundColor = ConsoleColor.Cyan;
 
-            Console.WriteLine($"\nCODIGO\t\t{"TITULO".PadRight(40, ' ')}{"AUTOR".PadRight(15, ' ')}{"GÉNERO".PadRight(15, ' ')}{"COPIAS".PadRight(8, ' ')}VECES PRESTADO");
+            Console.WriteLine($"\nCODIGO\t\t{"TITULO".PadRight(40, ' ')}{"AUTOR".PadRight(25, ' ')}{"GÉNERO".PadRight(15, ' ')}{"COPIAS".PadRight(8, ' ')}VECES PRESTADO");
             Console.ResetColor();
             foreach (Libro lib in lista_libs)
             {
-                Console.WriteLine($"{lib.codigo}\t\t{lib.titulo.PadRight(40, ' ')}{lib.autor.PadRight(15, ' ')}{lib.genero.PadRight(15, ' ')}{Convert.ToString(lib.copias).PadRight(8, ' ')}{Convert.ToString(lib.veces_prestado)}");
+                Console.WriteLine($"{lib.codigo}\t\t{lib.titulo.PadRight(40, ' ')}{lib.autor.PadRight(25, ' ')}{lib.genero.PadRight(15, ' ')}{Convert.ToString(lib.copias).PadRight(8, ' ')}{Convert.ToString(lib.veces_prestado)}");
             }
         }
-        public void actualizar_stock(List<int> codigos, List<int> cantidades)
+        public void actualizar_stock(List<int> codigos, List<int> cantidades, bool prestar)
         {
             for (int i = 0; i < codigos.Count(); i++)
             {
                 Libro lib = BuscarLibro(codigos[i]);
-                if (lib != null) lib.copias -= cantidades[i];
+                if (prestar)
+                {
+                    if (lib != null) lib.copias -= cantidades[i];
+                } // si se usa para crear un préstamo, se restan las unidades
+                else
+                {
+                    if (lib != null) lib.copias += cantidades[i];
+                } // si se usa para DEVOLVER un préstamo, se suman
             }
         }
     }

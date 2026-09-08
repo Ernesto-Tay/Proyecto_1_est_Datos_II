@@ -57,16 +57,20 @@ namespace ProyectoEst1
                                             {
                                                 throw new Exception("La cantidad de copias no puede ser negativa ni cero");
                                             }
+                                            if (titulo == "" || autor == "" || genero == "")
+                                            {
+                                                throw new FormatException("Los campos no pueden estar vacíos");
+                                            }
                                             Libro libro = new Libro(cod, titulo, autor, genero, copias, 0);
                                             lib_mng.admin.Insertar(libro);
                                             lib_mng.admin2.agregar(libro);
                                             Console.WriteLine("Libro insertado con éxito");
                                         }
-                                        catch (ArgumentNullException ex)
+                                        catch (FormatException ex)
                                         {
                                                             Console.ForegroundColor = ConsoleColor.DarkRed;
 
-                                            Console.WriteLine("ingrese los tipos de valor correspondientes");
+                                            Console.WriteLine("Error: no ingrese texto en campos numéricos y no deje campos vacíos");
                                             Console.ResetColor();
                                         }
                                         catch (DuplicateWaitObjectException x)
@@ -126,6 +130,8 @@ namespace ProyectoEst1
                                             {
                                                 if (pre_mng.admin.Prestado(cod_search) == null)
                                                 {
+                                                    Console.Write($"El libro {lib_mng.admin.BuscarLibro(cod_search).titulo} fué eliminado exitosamente del sistema.");
+
                                                     lib_mng.admin.eliminar(cod_search);
                                                     lib_mng.admin2.bye_libro(cod_search);
                                                 }
@@ -186,10 +192,13 @@ namespace ProyectoEst1
                                     {
                                         try
                                         {
+                                            Console.Write("Ingrese nombre del solicitante: ");
+                                            string solicitante = Console.ReadLine();
                                             lib_mng.admin.mostrar_pa_prestamo(); // muestra libros disponibles
 
                                             List<int> codigos = new List<int>();
                                             List<int> cantidades = new List<int>();
+                                            Dictionary<int, int> apartado = new Dictionary<int, int>(); // para evitar apartar de más
                                             Console.WriteLine("Ingrese códigos a prestar (0 para terminar):");
                                             while (true)
                                             {
@@ -198,14 +207,19 @@ namespace ProyectoEst1
                                                 if (cod == 0) break;
 
                                                 Libro libro = lib_mng.admin.BuscarLibro(cod);
-                                                if (libro == null) { Console.WriteLine("No existe ese código."); continue; }
+                                                if (libro == null) { Console.WriteLine("No existe ese código."); continue; } // si el libro no existe, entonces permite ingresar otra vez
+
+                                                int ya_apartado = apartado.ContainsKey(cod) ? apartado[cod] : 0; // si se solicita el mismo libro varias veces, suma las cantidades
+                                                int disp = libro.copias - ya_apartado;
+
 
                                                 Console.Write("Cantidad a prestar: ");
                                                 int cant = Convert.ToInt32(Console.ReadLine());
-                                                if (cant <= 0 || cant > libro.copias) { Console.WriteLine("Cantidad inválida."); continue; }
+                                                if (cant <= 0 || cant > disp) { Console.WriteLine("Cantidad inválida."); continue; }
 
                                                 codigos.Add(cod);
                                                 cantidades.Add(cant);
+                                                apartado[cod] = cant + ya_apartado;
                                             }
 
                                             if (codigos.Count == 0)
@@ -214,25 +228,37 @@ namespace ProyectoEst1
                                             }
                                             else
                                             {
-                                                pre_mng.admin.agregar(codigos, cantidades);
-                                                lib_mng.admin.actualizar_stock(codigos, cantidades);
-
-                                                foreach (int cod in codigos)
+                                                bool fue_ingresado = pre_mng.admin.agregar(codigos, cantidades, solicitante);
+                                                if (fue_ingresado)
                                                 {
-                                                    Libro lib = lib_mng.admin.BuscarLibro(cod);
-                                                    if (lib != null)
+                                                    lib_mng.admin.actualizar_stock(codigos, cantidades, true);
+
+                                                    foreach (int cod in codigos)
                                                     {
-                                                        lib.veces_prestado++;
-                                                        lib_mng.admin2.upd_prioridad(lib);
+                                                        Libro lib = lib_mng.admin.BuscarLibro(cod);
+                                                        if (lib != null)
+                                                        {
+                                                            lib.veces_prestado++;
+                                                            lib_mng.admin2.upd_prioridad(lib);
+                                                        }
                                                     }
+                                                    Console.WriteLine("Préstamo agregado con éxito.");
                                                 }
-                                                Console.WriteLine("Préstamo agregado con éxito.");
+                                                else
+                                                {
+                                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                                    Console.WriteLine("Ya existe un préstamo igual");
+                                                    Console.ResetColor();
+                                                }
+                                                
                                             }
                                         }
-                                        catch (Exception x) {                Console.ForegroundColor = ConsoleColor.DarkRed;
-
+                                        catch (Exception x) 
+                                        {
+                                            Console.ForegroundColor = ConsoleColor.DarkRed;
                                             Console.WriteLine($"Error: {x}");
-                                            Console.ResetColor(); }
+                                            Console.ResetColor();
+                                            }
                                         break;
                                     }
                                 case "2":
@@ -241,17 +267,17 @@ namespace ProyectoEst1
                                         {
                                             Console.Write("Código de libro a buscar en préstamos: ");
                                             int cod_buscar = Convert.ToInt32(Console.ReadLine());
-                                            Prestamo encontrado = pre_mng.admin.Prestado(cod_buscar);
-                                            if (encontrado != null)
+                                            var encontrados = pre_mng.admin.Prestado(cod_buscar);
+                                            if (encontrados != null)
                                             {
                                                 Console.WriteLine("Préstamo encontrado: ");
+                                                foreach(Prestamo encontrado in encontrados)
                                                 encontrado.mostrar_datos();
                                                 Console.WriteLine();
                                             }
 
                                             else {
-                                                                Console.ForegroundColor = ConsoleColor.DarkRed;
-
+                                                Console.ForegroundColor = ConsoleColor.DarkRed;
                                                 Console.WriteLine("No se encontró préstamo con ese código.");
                                                 Console.ResetColor();
                                                  }
@@ -273,6 +299,8 @@ namespace ProyectoEst1
                                             Console.WriteLine("Préstamo atendido: ");
                                             atendido.mostrar_datos();
                                             Console.WriteLine();
+                                            lib_mng.admin.actualizar_stock(atendido.libros_prestados, atendido.cantidad_prestada, false);
+
                                         }
                                         else Console.WriteLine("No hay préstamos pendientes.");
                                         break;
