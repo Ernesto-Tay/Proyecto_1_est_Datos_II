@@ -12,6 +12,7 @@ namespace ProyectoEst1
             GuardarPrestamos pre_mng = new GuardarPrestamos();
             lib_mng.Cargar(); // se cargan los datos de forma preliminar
             pre_mng.Cargar();
+            Console.Out.Flush();
             while (input1 != "3")
             {
                                 Console.ForegroundColor = ConsoleColor.Magenta;

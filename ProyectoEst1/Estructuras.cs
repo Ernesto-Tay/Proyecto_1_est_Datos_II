@@ -461,11 +461,11 @@ namespace ProyectoEst1
             Nodo nodo = raiz;
             while (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
                 Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine($"CODIGO\t{"TITULO".PadRight(30, ' ')}\tCANTIDAD");
+                Console.WriteLine($"CODIGO\t{"TITULO".PadRight(40, ' ')}\tCANTIDAD");
                 Console.ResetColor();
                while (nodo != null) {
                     // muestra la info de los libros que se encuentran en cada hoja
-                    foreach (Libro libro in nodo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo.PadRight(30, ' ')}\t{libro.copias}");
+                    foreach (Libro libro in nodo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo.PadRight(40, ' ')}\t{libro.copias}");
                 nodo = nodo.siguiente;
                 
             }
@@ -489,11 +489,11 @@ namespace ProyectoEst1
         {
                             Console.ForegroundColor = ConsoleColor.Cyan;
 
-            Console.WriteLine($"\nCODIGO\t\t{"TITULO".PadRight(40, ' ')}{"AUTOR".PadRight(25, ' ')}{"GÉNERO".PadRight(15, ' ')}{"COPIAS".PadRight(8, ' ')}VECES PRESTADO");
+            Console.WriteLine($"\nCODIGO\t\t{"TITULO".PadRight(40, ' ')}{"AUTOR".PadRight(35, ' ')}{"GÉNERO".PadRight(25, ' ')}{"COPIAS".PadRight(8, ' ')}VECES PRESTADO");
             Console.ResetColor();
             foreach (Libro lib in lista_libs)
             {
-                Console.WriteLine($"{lib.codigo}\t\t{lib.titulo.PadRight(40, ' ')}{lib.autor.PadRight(25, ' ')}{lib.genero.PadRight(15, ' ')}{Convert.ToString(lib.copias).PadRight(8, ' ')}{Convert.ToString(lib.veces_prestado)}");
+                Console.WriteLine($"{lib.codigo}\t\t{lib.titulo.PadRight(40, ' ')}{lib.autor.PadRight(35, ' ')}{lib.genero.PadRight(25, ' ')}{Convert.ToString(lib.copias).PadRight(8, ' ')}{Convert.ToString(lib.veces_prestado)}");
             }
         }
         public void actualizar_stock(List<int> codigos, List<int> cantidades, bool prestar)

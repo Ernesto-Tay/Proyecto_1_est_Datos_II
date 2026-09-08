@@ -8,11 +8,11 @@ namespace ProyectoEst1
         public List<int> libros_prestados { get; set; } // aquí estarán los códigos
         public List<int> cantidad_prestada { get; set; } // y aquí las cantidades
         public int prioridad { get; set; }
-        public Prestamo(List<int> Libros, List<int> cantidades)
+        public Prestamo(List<int> libros_prestados, List<int> cantidad_prestada)
         {
             this.destinatario = "";
-            this.libros_prestados = Libros;
-            this.cantidad_prestada = cantidades;
+            this.libros_prestados = libros_prestados;
+            this.cantidad_prestada = cantidad_prestada;
             this.prioridad = 0;
         }
         public void EstablecerPrioridad()
@@ -251,12 +251,12 @@ namespace ProyectoEst1
             copia.Sort((a, b) => -a.veces_prestado.CompareTo(b.veces_prestado));
             int i = 0;
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"No.\t{"TITULO".PadRight(30, ' ')}{"AUTOR".PadRight(15, ' ')}{"PRESTACIONES".PadRight(5, ' ')}");
+            Console.WriteLine($"No.\t{"TITULO".PadRight(40, ' ')}{"AUTOR".PadRight(30, ' ')}{"PRESTACIONES".PadRight(5, ' ')}");
             Console.ResetColor();
             foreach (Libro libro in copia)
             {
                 i += 1;
-                Console.WriteLine($"{i}\t{libro.titulo.PadRight(30, ' ')}{libro.autor.PadRight(15, ' ')}{Convert.ToString(libro.veces_prestado).PadRight(5, ' ')}");
+                Console.WriteLine($"{i}\t{libro.titulo.PadRight(40, ' ')}{libro.autor.PadRight(30, ' ')}{Convert.ToString(libro.veces_prestado).PadRight(5, ' ')}");
             }
         }
 
