@@ -6,14 +6,15 @@ namespace ProyectoEst1
     class Program
     {
         public static void Main(string[] args)
-        {   // se instancias los administradores de persistencia
+        {   // se instancian los administradores de persistencia
             string input1 = "0";
             GuardarLibros lib_mng = new GuardarLibros();
             GuardarPrestamos pre_mng = new GuardarPrestamos();
+            lib_mng.Cargar(); // se cargan los datos de forma preliminar
+            pre_mng.Cargar();
             while (input1 != "3")
             {
-                lib_mng.Cargar();
-                pre_mng.Cargar();
+                
                 Console.WriteLine("\n-------------------SISTEMA-------------------\n1. Ir a menú de libros\n2. ir a menú de préstamos\n3. Salir del sistema");
                 Console.Write("Seleccione una opción: ");
                 input1 = Console.ReadLine();
@@ -35,7 +36,7 @@ namespace ProyectoEst1
                                             int cod = Convert.ToInt32(Console.ReadLine());
                                             if (lib_mng.admin.buscar(cod))
                                             {
-                                                throw new DuplicateWaitObjectException("Ya existe un valor con ese nombre");
+                                                throw new DuplicateWaitObjectException("Ya existe un libro con ese código");
                                             }
 
                                             Console.Write("Ingrese título: ");
@@ -52,6 +53,7 @@ namespace ProyectoEst1
                                             }
                                             Libro libro = new Libro(cod, titulo, autor, genero, copias, 0);
                                             lib_mng.admin.Insertar(libro);
+                                            lib_mng.admin2.agregar(libro);
                                             Console.WriteLine("Libro insertado con éxito");
                                         }
                                         catch (ArgumentNullException ex)

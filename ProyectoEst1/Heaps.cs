@@ -82,6 +82,10 @@ namespace ProyectoEst1
         public void agregar(List<int> codigos, List<int> cantidades) // agrega un nuevo préstamo a la lista
         {
             Prestamo nuevo = new Prestamo(codigos, cantidades);
+            if (!Buscar(nuevo))
+            {
+                return;
+            }
             nuevo.EstablecerPrioridad();
             heap.Add(nuevo);
             heapify_up(heap.Count - 1);
@@ -144,6 +148,10 @@ namespace ProyectoEst1
                 }
             }
             return null;
+        }
+        public bool Buscar(Prestamo p)
+        {
+            return heap.IndexOf(p) == -1;
         }
     }
 
@@ -214,11 +222,17 @@ namespace ProyectoEst1
         }
 
 
-        public List<Libro> mostrar_ranking()
+        public void mostrar_ranking()
         {
             List<Libro> copia = new List<Libro>(heap);
             copia.Sort((a, b) => -a.veces_prestado.CompareTo(b.veces_prestado));
-            return copia;
+            int i = 0;
+            Console.WriteLine($"No.\t{"TITULO".PadRight(30, ' ')}{"AUTOR".PadRight(15, ' ')}{"PRESTACIONES".PadRight(5, ' ')}");
+            foreach (Libro libro in copia)
+            {
+                i += 1;
+                Console.WriteLine($"{i}\t{libro.titulo.PadRight(30, ' ')}{libro.autor.PadRight(15, ' ')}{Convert.ToString(libro.veces_prestado).PadRight(5, ' ')}");
+            }
         }
 
 

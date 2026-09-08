@@ -150,6 +150,7 @@ namespace ProyectoEst1
         public Libro BuscarLibro(int clave) // para buscar los libros (pues trabajamos con esas mmds, PEERO se me olvidó x,D)
         {
             Nodo hoja = buscar_hoja(clave);
+
             int posc = Utilidades.ins_izq(hoja.claves, clave);
 
             if (posc < hoja.claves.Count && hoja.claves[posc] == clave)
@@ -267,7 +268,7 @@ namespace ProyectoEst1
             int posc = Utilidades.ins_izq(hoja.claves, clave);
 
             //caso 1: clave inexistente
-            if (posc > hoja.claves.Count || hoja.claves[posc] != clave) return false;
+            if (posc >= hoja.claves.Count || hoja.claves[posc] != clave) return false;
 
             hoja.claves.RemoveAt(posc);
             hoja.libros.RemoveAt(posc);
@@ -456,10 +457,10 @@ namespace ProyectoEst1
         {
             Nodo nodo = raiz;
                 while (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
-               while (nodo.siguiente != null) {
-                Console.WriteLine("CODIGO\tTITULO\t\tCANTIDAD");
+               while (nodo != null) {
+                Console.WriteLine($"CODIGO\t{"TITULO".PadRight(30, ' ')}\tCANTIDAD");
                     // muestra la info de los libros que se encuentran en cada hoja
-                    foreach (Libro libro in nodo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo}\t\t{libro.copias}");
+                    foreach (Libro libro in nodo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo.PadRight(30, ' ')}\t{libro.copias}");
                 nodo = nodo.siguiente;
                 
             }
@@ -481,10 +482,10 @@ namespace ProyectoEst1
 
         private void mostrar_por_titulo(List<Libro> lista_libs)
         {
-            Console.WriteLine("\nCODIGO\t\tTITULO\t\tAUTOR\tGÉNERO\tCOPIAS\tVECES PRESTADO");
+            Console.WriteLine($"\nCODIGO\t\t{"TITULO".PadRight(40, ' ')}{"AUTOR".PadRight(15, ' ')}{"GÉNERO".PadRight(15, ' ')}{"COPIAS".PadRight(8, ' ')}VECES PRESTADO");
             foreach (Libro lib in lista_libs)
             {
-                Console.WriteLine($"{lib.codigo}\t{lib.titulo}\t{lib.autor}\t{lib.genero}\t{lib.copias}\t{lib.veces_prestado}");
+                Console.WriteLine($"{lib.codigo}\t\t{lib.titulo.PadRight(40, ' ')}{lib.autor.PadRight(15, ' ')}{lib.genero.PadRight(15, ' ')}{Convert.ToString(lib.copias).PadRight(8, ' ')}{Convert.ToString(lib.veces_prestado)}");
             }
         }
         public void actualizar_stock(List<int> codigos, List<int> cantidades)
