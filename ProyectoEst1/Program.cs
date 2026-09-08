@@ -14,15 +14,20 @@ namespace ProyectoEst1
             pre_mng.Cargar();
             while (input1 != "3")
             {
-                
+                                Console.ForegroundColor = ConsoleColor.Magenta;
+
                 Console.WriteLine("\n-------------------SISTEMA-------------------\n1. Ir a menú de libros\n2. ir a menú de préstamos\n3. Salir del sistema");
+                Console.ResetColor();
                 Console.Write("Seleccione una opción: ");
                 input1 = Console.ReadLine();
                 switch (input1)
                 {
                     case "1":
-                        {
+                        {   
+                                            Console.ForegroundColor = ConsoleColor.Cyan;
+
                             Console.WriteLine("\n---------- MENÚ LIBROS ----------\n1. Agregar libro\n2. Ver catálogo\n3. Buscar libro\n4. Eliminar libro\n5. ver libros más prestados\n6. volver al menú");
+                            Console.ResetColor();
                             Console.Write("Selecciona una opción: ");
                             string input2 = Console.ReadLine();
 
@@ -36,6 +41,7 @@ namespace ProyectoEst1
                                             int cod = Convert.ToInt32(Console.ReadLine());
                                             if (lib_mng.admin.buscar(cod))
                                             {
+                                                
                                                 throw new DuplicateWaitObjectException("Ya existe un libro con ese código");
                                             }
 
@@ -58,15 +64,24 @@ namespace ProyectoEst1
                                         }
                                         catch (ArgumentNullException ex)
                                         {
+                                                            Console.ForegroundColor = ConsoleColor.DarkRed;
+
                                             Console.WriteLine("ingrese los tipos de valor correspondientes");
+                                            Console.ResetColor();
                                         }
                                         catch (DuplicateWaitObjectException x)
                                         {
+                                                            Console.ForegroundColor = ConsoleColor.DarkRed;
+
                                             Console.WriteLine($"Error: {x}");
+                                            Console.ResetColor();
                                         }
                                         catch (Exception x)
                                         {
+                                                            Console.ForegroundColor = ConsoleColor.DarkRed;
+
                                             Console.WriteLine($"Error: {x}");
+                                            Console.ResetColor();
                                         }
                                         break;
                                     }
@@ -94,7 +109,10 @@ namespace ProyectoEst1
                                         }
                                         catch (Exception x)
                                         {
+                                                            Console.ForegroundColor = ConsoleColor.DarkRed;
+
                                             Console.WriteLine($"Error: {x}");
+                                            Console.ResetColor();
                                         }
                                         break;
                                     }
@@ -113,17 +131,26 @@ namespace ProyectoEst1
                                                 }
                                                 else
                                                 {
+                                                                    Console.ForegroundColor = ConsoleColor.Yellow;
+
                                                     Console.WriteLine("Ese libro tiene préstamos activos, por lo que no se puede eliminar.");
+                                                    Console.ResetColor();
                                                 }
                                             }
                                             else
                                             {
+                                                                Console.ForegroundColor = ConsoleColor.Yellow;
+
                                                 Console.WriteLine("No se encontró un libro con ese código");
+                                                Console.ResetColor();
                                             }
                                         }
                                         catch (Exception x)
                                         {
+                                                            Console.ForegroundColor = ConsoleColor.DarkRed;
+
                                             Console.WriteLine($"Error: {x}");
+                                            Console.ResetColor();
                                         }
                                         break;
                                     }
@@ -147,7 +174,10 @@ namespace ProyectoEst1
                         }
                     case "2":
                         {
+                                            Console.ForegroundColor = ConsoleColor.Blue;
+
                             Console.WriteLine("\n---------- MENÚ PRÉSTAMOS ----------\n1. Añadir préstamo\n2. Buscar préstamo\n3. Atender préstamo\n4. Mostrar cola de préstamos\n5. Mostrar siguiente préstamo en cola\n6. volver al menú");
+                            Console.ResetColor();
                             Console.Write("Selecciona una opción: ");
                             string input3 = Console.ReadLine();
                             switch (input3)
@@ -199,7 +229,10 @@ namespace ProyectoEst1
                                                 Console.WriteLine("Préstamo agregado con éxito.");
                                             }
                                         }
-                                        catch (Exception x) { Console.WriteLine($"Error: {x}"); }
+                                        catch (Exception x) {                Console.ForegroundColor = ConsoleColor.DarkRed;
+
+                                            Console.WriteLine($"Error: {x}");
+                                            Console.ResetColor(); }
                                         break;
                                     }
                                 case "2":
@@ -215,9 +248,21 @@ namespace ProyectoEst1
                                                 encontrado.mostrar_datos();
                                                 Console.WriteLine();
                                             }
-                                            else Console.WriteLine("No se encontró préstamo con ese código.");
+
+                                            else {
+                                                                Console.ForegroundColor = ConsoleColor.DarkRed;
+
+                                                Console.WriteLine("No se encontró préstamo con ese código.");
+                                                Console.ResetColor();
+                                                 }
                                         }
-                                        catch (Exception x) { Console.WriteLine($"Error: {x}"); }
+                                        catch (Exception x)
+                                        {
+                                                            Console.ForegroundColor = ConsoleColor.DarkRed;
+
+                                            Console.WriteLine($"Error: {x}");
+                                            Console.ResetColor();
+                                        }
                                         break;
                                     }
                                 case "3":
@@ -256,7 +301,10 @@ namespace ProyectoEst1
                                     }
                                 default:
                                     {
+                                                        Console.ForegroundColor = ConsoleColor.Yellow;
+
                                         Console.WriteLine("Opción inválida.");
+                                        Console.ResetColor();
                                         break;
                                     }
                             }

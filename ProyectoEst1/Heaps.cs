@@ -121,8 +121,9 @@ namespace ProyectoEst1
                 Console.WriteLine("La cola está vacía");
                 return;
             }
-
+                            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("--------------- Cola actual ---------------");
+            Console.ResetColor();
             int i = 0;
             foreach (Prestamo val in heap)
             {
@@ -227,7 +228,9 @@ namespace ProyectoEst1
             List<Libro> copia = new List<Libro>(heap);
             copia.Sort((a, b) => -a.veces_prestado.CompareTo(b.veces_prestado));
             int i = 0;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"No.\t{"TITULO".PadRight(30, ' ')}{"AUTOR".PadRight(15, ' ')}{"PRESTACIONES".PadRight(5, ' ')}");
+            Console.ResetColor();
             foreach (Libro libro in copia)
             {
                 i += 1;
@@ -243,8 +246,9 @@ namespace ProyectoEst1
                 Console.WriteLine("La cola está vacía");
                 return;
             }
-
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("--------------- Cola actual ---------------");
+            Console.ResetColor();
             int i = 0;
             foreach (Libro val in heap)
             {

@@ -16,7 +16,9 @@ namespace ProyectoEst1
             }
             catch (JsonException ex)
             {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine($"Error al leer Jsons: {ex.Message}");
+                Console.ResetColor();
             }
         }
 
@@ -35,7 +37,10 @@ namespace ProyectoEst1
             }
             catch (JsonException ex)
             {
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+
                 Console.WriteLine($"Error al leer Jsons: {ex.Message}");
+                Console.ResetColor();
             }
             
         }
@@ -55,7 +60,10 @@ namespace ProyectoEst1
             }
             catch (JsonException ex)
             {
+                                Console.ForegroundColor = ConsoleColor.DarkRed;
+
                 Console.WriteLine($"Error al leer Jsons: {ex.Message}");
+                Console.ResetColor();
             }
         }
         public void Cargar()

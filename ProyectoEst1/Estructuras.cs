@@ -458,7 +458,10 @@ namespace ProyectoEst1
             Nodo nodo = raiz;
                 while (!nodo.esHoja) nodo = nodo.hijos[0]; // Lleva a la hoja menor
                while (nodo != null) {
+                                Console.ForegroundColor = ConsoleColor.Blue;
+
                 Console.WriteLine($"CODIGO\t{"TITULO".PadRight(30, ' ')}\tCANTIDAD");
+                Console.ResetColor();
                     // muestra la info de los libros que se encuentran en cada hoja
                     foreach (Libro libro in nodo.libros) Console.WriteLine($"{libro.codigo}\t{libro.titulo.PadRight(30, ' ')}\t{libro.copias}");
                 nodo = nodo.siguiente;
@@ -482,7 +485,10 @@ namespace ProyectoEst1
 
         private void mostrar_por_titulo(List<Libro> lista_libs)
         {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+
             Console.WriteLine($"\nCODIGO\t\t{"TITULO".PadRight(40, ' ')}{"AUTOR".PadRight(15, ' ')}{"GÉNERO".PadRight(15, ' ')}{"COPIAS".PadRight(8, ' ')}VECES PRESTADO");
+            Console.ResetColor();
             foreach (Libro lib in lista_libs)
             {
                 Console.WriteLine($"{lib.codigo}\t\t{lib.titulo.PadRight(40, ' ')}{lib.autor.PadRight(15, ' ')}{lib.genero.PadRight(15, ' ')}{Convert.ToString(lib.copias).PadRight(8, ' ')}{Convert.ToString(lib.veces_prestado)}");
